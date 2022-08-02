@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, I18nManager } from "react-native";
+import CoinDetailsScreen from "./src/screens/CoinDetailsScreen";
+import HomeScreen from "./src/screens/HomeScreen";
 export default function App() {
+  I18nManager.allowRTL(false);
+  I18nManager.forceRTL(false);
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <CoinDetailsScreen/>
+      <StatusBar style="light" />
     </View>
   );
 }
@@ -13,8 +16,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#121212",
+    paddingTop: 50,
   },
 });
