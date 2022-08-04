@@ -4,7 +4,7 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
         fontWeight: "bold",
-        marginBottom:3
+        marginBottom:3,
       },
       text: {
         color: "#fff",
@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         borderBottomWidth:StyleSheet.hairlineWidth,
         borderBottomColor:'grey',
-        padding:10
+        padding:10,
       },rank:{
         color: '#fff',
         fontWeight: "bold",
