@@ -9,7 +9,7 @@ const WatchListScreen = () => {
     const [coins, setCoins] = useState([])
     const [loading, setLoading] = useState(false)
     const fetchWatchedListCoins=async()=>{
-      if(loading) return;
+      if(loading||watchList?.watchListCoinIds.length<1) return;
       setLoading(true)
     const res= await getWatchListedCoins(watchList?.watchListCoinIds.join(','))
       setCoins(res);

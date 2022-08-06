@@ -5,6 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import Navigation from "./src/navigation";
 import Constants from "expo-constants"
 import { WatchListProvider } from "./src/context/WatchListContext";
+import { RecoilRoot } from "recoil";
 export default function App() {
   I18nManager.allowRTL(false);
   I18nManager.forceRTL(false);
@@ -14,12 +15,14 @@ export default function App() {
         background: '#121212'
       }
     }}>
+      <RecoilRoot>
      <WatchListProvider>
      <View style={styles.container}>
         <Navigation />
         <StatusBar style="light" />
       </View>
      </WatchListProvider>
+     </RecoilRoot>
     </NavigationContainer>
   );
 }
