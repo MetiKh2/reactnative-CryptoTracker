@@ -20,13 +20,14 @@ import {
   getCoinMarketChart,
 } from "./../../services/rquests";
 import { CoinDetails, CoinMarketChart } from "../../interfaces";
+import FilterComponent from "../../components/FilterComponent";
 const CoinDetailsScreen = () => {
   const route = useRoute();
   const { params } = route;
   const [coinValue, setCoinValue] = useState("1");
   const [coinChart, setCoinChart] = useState<CoinMarketChart>({ prices: [] });
   const [coinData, setCoinData] = useState<CoinDetails>({
-    id:'',
+    id: "",
     image: { small: "" },
     name: "",
     market_cap_rank: 0,
@@ -34,12 +35,14 @@ const CoinDetailsScreen = () => {
     market_data: { current_price: { usd: 0 }, price_change_percentage_24h: 0 },
   });
   const [loading, setLoading] = useState(true);
+  const [chartloading, setChartLoading] = useState(false);
   const [usdValue, setUsdValue] = useState<string>();
-  const {usd}=coinData.market_data.current_price;
+  const [selectedRange, setSelectedRange] = useState("7");
+  const { usd } = coinData.market_data.current_price;
   useEffect(() => {
     setUsdValue(usd.toString());
-  }, [usd])
-  
+  }, [usd]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -52,8 +55,20 @@ const CoinDetailsScreen = () => {
     fetchData();
   }, [params.coinId]);
 
+  useEffect(() => {
+    const fetchChart= async()=>{
+      setChartLoading(true)
+      const data=await getCoinMarketChart(params.coinId,parseInt(selectedRange))
+      setCoinChart(data)
+      setChartLoading(false)
+    }
+    fetchChart();
+  }, [selectedRange]);
+
   const percentageColor =
-    coinData.market_data.price_change_percentage_24h < 0 ? "#ea3943" : "#16c784" || "white";
+    coinData.market_data.price_change_percentage_24h < 0
+      ? "#ea3943"
+      : "#16c784" || "white";
   // const chartColor = usd > prices[0][1] ? "#16c784" : "#ea3943";
   const screenWidth = Dimensions.get("window").width;
   const changeCoinValue = (value: string) => {
@@ -67,6 +82,9 @@ const CoinDetailsScreen = () => {
     const floatValue = parseFloat(value.replace(",", ".")) || 0;
     setCoinValue((floatValue / usd).toFixed(3).toString());
   };
+  const onSelectRangeChange = (rangeValue: string) => {
+    setSelectedRange(rangeValue);
+  };
   return (
     <ScrollView>
       {loading || !coinData || !coinChart ? (
@@ -75,7 +93,7 @@ const CoinDetailsScreen = () => {
         <>
           <View style={{ paddingHorizontal: 10 }}>
             <CoinDetailsHeader
-            coinId={coinData.id}
+              coinId={coinData.id}
               market_cap_rank={coinData.market_cap_rank}
               image={coinData.image.small}
               symbol={coinData.symbol}
@@ -83,9 +101,7 @@ const CoinDetailsScreen = () => {
             <View style={styles.priceContainer}>
               <View>
                 <Text style={styles.name}>{coinData.name}</Text>
-                <Text style={styles.currentPrice}>
-                  {usd}
-                </Text>
+                <Text style={styles.currentPrice}>{usd}</Text>
               </View>
               <View
                 style={{
@@ -107,23 +123,51 @@ const CoinDetailsScreen = () => {
                   style={{ alignSelf: "center", marginRight: 5 }}
                 />
                 <Text style={styles.priceChange}>
-                  {coinData.market_data.price_change_percentage_24h?.toFixed(2)}%
+                  {coinData.market_data.price_change_percentage_24h?.toFixed(2)}
+                  %
                 </Text>
               </View>
             </View>
+            <View style={styles.filtersContainer}>
+              <FilterComponent
+                setSelectedRange={onSelectRangeChange}
+                filterDay={1}
+                filterText="24h"
+                selectedRange={selectedRange}
+              />
+              <FilterComponent
+                setSelectedRange={onSelectRangeChange}
+                filterDay={7}
+                filterText="7d"
+                selectedRange={selectedRange}
+              />
+              <FilterComponent
+                setSelectedRange={onSelectRangeChange}
+                filterDay={30}
+                filterText="30d"
+                selectedRange={selectedRange}
+              />
+              <FilterComponent
+                setSelectedRange={onSelectRangeChange}
+                filterDay={365}
+                filterText="1y"
+                selectedRange={selectedRange}
+              />
+              <FilterComponent
+                setSelectedRange={onSelectRangeChange}
+                filterDay={0}
+                filterText="All"
+                selectedRange={selectedRange}
+              />
+            </View>
           </View>
           <View style={{ paddingHorizontal: 5 }}>
-            <LineChart
+          {chartloading?<ActivityIndicator size={'large'}/>:(  <LineChart
               data={{
-                labels: coinChart.prices.map(
+                labels: coinChart?.prices?.length<10?coinChart.prices.map(
                   (price) =>
-                    // `${new Date(price[0]).getFullYear().toString()}-${new Date(
-                    //   price[0]
-                    // )
-                    //   .getMonth()
-                    //   .toString()}`
                     `${new Date(price[0]).toLocaleDateString()}`
-                ),
+                ):[],
                 datasets: [
                   {
                     data: coinChart.prices.map((price) => price[1]),
@@ -134,7 +178,7 @@ const CoinDetailsScreen = () => {
               height={350}
               yAxisLabel="$"
               yAxisSuffix="k"
-              yAxisInterval={2}
+              //yAxisInterval={2}
               xLabelsOffset={-2}
               chartConfig={{
                 backgroundColor: "#585858",
@@ -158,7 +202,7 @@ const CoinDetailsScreen = () => {
                 marginVertical: 8,
                 borderRadius: 5,
               }}
-            />
+            />)}
           </View>
           <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
             <View style={{ flexDirection: "row", flex: 1 }}>

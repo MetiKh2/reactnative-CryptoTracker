@@ -6,8 +6,10 @@ const styles = StyleSheet. create({
         fontWeight: 'bold',
         fontSize: 16,
     },container:{
+        paddingVertical:10,
         paddingHorizontal:10,
         flexDirection:'row',
+        backgroundColor:'#121212'
     },ticker:{
         color: 'grey',
         fontWeight: '600'

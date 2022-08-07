@@ -1,4 +1,4 @@
-import {FlatList } from 'react-native'
+import {FlatList, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useWatchList } from '../../context/WatchListContext'
 import CoinItem from './../../components/CoinItem/index';
@@ -22,7 +22,11 @@ const WatchListScreen = () => {
     return (
     <FlatList
       data={coins}
-     renderItem={({ item }) => <CoinItem marketCoin={item} />}
+     renderItem={({ item }) => <CoinItem marketCoin={item} />
+    }
+    ListEmptyComponent={<View style={{alignItems: 'center'}}>
+      <Text style={{color:'white',fontSize:20}}>You're watch list is empty</Text>
+      </View>}
     />
   )
 }

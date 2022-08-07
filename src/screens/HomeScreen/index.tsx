@@ -27,7 +27,12 @@ const HomeScreen = () => {
   if(coins.length<1||loading)return <ActivityIndicator size={"large"}/>
   return (
     <View>
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+      <Text style={{color:'white',fontSize:25,letterSpacing:1,paddingHorizontal:20,paddingBottom:5,fontFamily:'DroidSans'}}>Crypto assets</Text>
+      <Text style={{color:'grey',fontSize:13,letterSpacing:.5,paddingHorizontal:2,paddingBottom:5,fontFamily:'DroidSans'}}>Powered by Meti KH</Text>
+      </View>
       <FlatList
+      keyExtractor={(item,index)=>`${item?.id}-${index}`}
       refreshControl={
         <RefreshControl refreshing={loading} tintColor={'white'} onRefresh={refreshCoins}/>
       }

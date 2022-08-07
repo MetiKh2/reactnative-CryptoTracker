@@ -20,7 +20,7 @@ const AddNewAssetScreen = () => {
   );
   const navigation = useNavigation();
   const fetchAllCoins = async () => {
-    AsyncStorage.clear();
+    //AsyncStorage.clear();
     if (loading) {
       return;
     }
@@ -52,7 +52,7 @@ const AddNewAssetScreen = () => {
       image:selectedCoin.image.small,
       symbol:selectedCoin?.symbol?.toUpperCase(),
       quantityBought:parseFloat(quantity),
-      priceBought:selectedCoin?.current_price?.usd
+      priceBought: selectedCoin?.market_data?.current_price?.usd
     }
     const newAssets=[...assetsInStorage,newAsset]
     const jsonValue=JSON.stringify(newAssets)
