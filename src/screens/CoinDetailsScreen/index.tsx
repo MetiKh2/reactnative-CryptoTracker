@@ -1,15 +1,12 @@
 import {
   ActivityIndicator,
   Dimensions,
-  Image,
   ScrollView,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import crypto from "../../../assets/data/crypto.json";
 import styles from "./styles";
 import CoinDetailsHeader from "./components/CoinDetailsHeader";
 import { AntDesign } from "@expo/vector-icons";
@@ -42,7 +39,6 @@ const CoinDetailsScreen = () => {
   useEffect(() => {
     setUsdValue(usd.toString());
   }, [usd]);
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -56,12 +52,15 @@ const CoinDetailsScreen = () => {
   }, [params.coinId]);
 
   useEffect(() => {
-    const fetchChart= async()=>{
-      setChartLoading(true)
-      const data=await getCoinMarketChart(params.coinId,parseInt(selectedRange))
-      setCoinChart(data)
-      setChartLoading(false)
-    }
+    const fetchChart = async () => {
+      setChartLoading(true);
+      const data = await getCoinMarketChart(
+        params.coinId,
+        parseInt(selectedRange)
+      );
+      setCoinChart(data);
+      setChartLoading(false);
+    };
     fetchChart();
   }, [selectedRange]);
 
@@ -83,8 +82,10 @@ const CoinDetailsScreen = () => {
     setCoinValue((floatValue / usd).toFixed(3).toString());
   };
   const onSelectRangeChange = (rangeValue: string) => {
+    setChartLoading(true);
     setSelectedRange(rangeValue);
   };
+  console.log("first");
   return (
     <ScrollView>
       {loading || !coinData || !coinChart ? (
@@ -162,47 +163,55 @@ const CoinDetailsScreen = () => {
             </View>
           </View>
           <View style={{ paddingHorizontal: 5 }}>
-          {chartloading?<ActivityIndicator size={'large'}/>:(  <LineChart
-              data={{
-                labels: coinChart?.prices?.length<10?coinChart.prices.map(
-                  (price) =>
-                    `${new Date(price[0]).toLocaleDateString()}`
-                ):[],
-                datasets: [
-                  {
-                    data: coinChart.prices.map((price) => price[1]),
+            {chartloading ? (
+              <ActivityIndicator size={"large"} />
+            ) : (
+              <LineChart
+                data={{
+                  labels:
+                    coinChart?.prices?.length < 10
+                      ? coinChart.prices.map(
+                          (price) =>
+                            `${new Date(price[0]).toLocaleDateString()}`
+                        )
+                      : [],
+                  datasets: [
+                    {
+                      data: coinChart.prices.map((price) => price[1]),
+                    },
+                  ],
+                }}
+                width={Dimensions.get("window").width - 10} // from react-native
+                height={350}
+                yAxisLabel="$"
+                yAxisSuffix="k"
+                //yAxisInterval={2}
+                xLabelsOffset={-2}
+                chartConfig={{
+                  backgroundColor: "#585858",
+                  backgroundGradientFrom: "#585858",
+                  backgroundGradientTo: "#000",
+                  decimalPlaces: 2, // optional, defaults to 2dp
+                  color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                  labelColor: (opacity = 1) =>
+                    `rgba(255, 255, 255, ${opacity})`,
+                  style: {
+                    borderRadius: 10,
                   },
-                ],
-              }}
-              width={Dimensions.get("window").width - 10} // from react-native
-              height={350}
-              yAxisLabel="$"
-              yAxisSuffix="k"
-              //yAxisInterval={2}
-              xLabelsOffset={-2}
-              chartConfig={{
-                backgroundColor: "#585858",
-                backgroundGradientFrom: "#585858",
-                backgroundGradientTo: "#000",
-                decimalPlaces: 2, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 10,
-                },
-                propsForDots: {
-                  r: "3",
-                  strokeWidth: "0",
-                },
-              }}
-              yLabelsOffset={-1}
-              verticalLabelRotation={50}
-              bezier
-              style={{
-                marginVertical: 8,
-                borderRadius: 5,
-              }}
-            />)}
+                  propsForDots: {
+                    r: "3",
+                    strokeWidth: "0",
+                  },
+                }}
+                yLabelsOffset={-1}
+                verticalLabelRotation={50}
+                bezier
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 5,
+                }}
+              />
+            )}
           </View>
           <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
             <View style={{ flexDirection: "row", flex: 1 }}>

@@ -116,7 +116,7 @@ const PortfolioAssetsList = () => {
                   style={{ alignSelf: "center", marginRight: 5 }}
                 />
                 <Text style={styles.percentageChange}>
-                  {getCurrentPercentageChange()}%
+                  {getCurrentPercentageChange()=='NaN'?'0':getCurrentPercentageChange()}%
                 </Text>
               </View>
             </View>

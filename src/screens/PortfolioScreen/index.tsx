@@ -1,11 +1,11 @@
-import {  FlatList,  Text,  View } from 'react-native'
+import {  ActivityIndicator, FlatList,  Text,  View } from 'react-native'
 import React, { Suspense } from 'react'
 import styles from './styles'
 import PortfolioAssetsList from './components/PortfolioAssetsList'
 const PortfolioScreen = () => {
   return (
     <View>
-      <Suspense fallback={<Text style={{color:'white'}}>Loading Please Wait !</Text>}>
+      <Suspense fallback={<ActivityIndicator />}>
       <PortfolioAssetsList/>
       </Suspense>
     </View>
